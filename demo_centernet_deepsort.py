@@ -8,7 +8,7 @@ torch.backends.cudnn.deterministic = True
 
 #CenterNet
 import sys
-CENTERNET_PATH = '/home/asoft/centerNet-deep-sort/CenterNet/src/lib/'
+CENTERNET_PATH = '/home/ubuntu/phd/annotation/centerNet-deep-sort/CenterNet/src/lib/'
 sys.path.insert(0, CENTERNET_PATH)
 from detectors.detector_factory import detector_factory
 from opts import opts
@@ -34,7 +34,7 @@ opt.input_type = 'vid'   # for video, 'vid',  for webcam, 'webcam', for ip camer
 
 #------------------------------
 # for video
-opt.vid_path = 'MOT16-11.mp4'  #
+opt.vid_path = '/home/ubuntu/phd/annotation/centerNet-deep-sort/cam9/cam9_2021-02-22,18:04:39.mp4'  #
 #------------------------------
 # for webcam  (webcam device index is required)
 opt.webcam_ind = 0
@@ -82,6 +82,7 @@ class Detector(object):
 
 
         self.write_video = True
+        self.f =open('/home/ubuntu/phd/annotation/centerNet-deep-sort/cam9/gt.txt', 'a')
 
     def open(self, video_path):
 
@@ -108,7 +109,7 @@ class Detector(object):
         self.area = 0, 0, self.im_width, self.im_height
         if self.write_video:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-            self.output = cv2.VideoWriter("demo1.avi", fourcc, 20, (self.im_width, self.im_height))
+            self.output = cv2.VideoWriter("/home/ubuntu/phd/annotation/centerNet-deep-sort/cam9/demo1.avi", fourcc, 30, (self.im_width, self.im_height))
         #return self.vdo.isOpened()
 
 
@@ -137,7 +138,8 @@ class Detector(object):
                     bbox_xyxy = outputs[:, :4]
                     identities = outputs[:, -1]
                     ori_im = draw_bboxes(ori_im, bbox_xyxy, identities, offset=(xmin, ymin))
-
+                    for i in range(len(outputs)):
+                        self.f.write('{},{},{},{},{},{},{},{},{}\n'.format(frame_no, identities[i], bbox_xyxy[i, 0], bbox_xyxy[i, 1], bbox_xyxy[i, 2]-bbox_xyxy[i, 0], bbox_xyxy[i, 3]-bbox_xyxy[i, 1], 1, 1, 1.0))
 
             end = time.time()
             #print("deep time: {}s, fps: {}".format(end - start_deep_sort, 1 / (end - start_deep_sort)))
@@ -168,5 +170,5 @@ if __name__ == "__main__":
     det = Detector(opt)
 
     # det.open("D:\CODE\matlab sample code/season 1 episode 4 part 5-6.mp4")
-    det.open("MOT16-11.mp4")
+    det.open("/home/ubuntu/phd/annotation/centerNet-deep-sort/cam9/cam9_2021-02-22,18:04:39.mp4")
     det.detect()

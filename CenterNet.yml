@@ -1,4 +1,4 @@
-name: CenterNet
+name: centerNet_deepSort
 channels:
   - pytorch
   - defaults
@@ -57,5 +57,5 @@ dependencies:
     - scipy==1.3.0
     - sklearn==0.0
     - torch==0.4.1.post2
-prefix: /home/asoft/anaconda3/envs/CenterNet
+prefix: /home/ubuntu/miniconda3/envs/centerNet_deepSort
 
